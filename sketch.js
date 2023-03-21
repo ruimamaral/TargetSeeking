@@ -46,6 +46,8 @@ function setup()
   
   randomizeTrials();         // randomize the trial order at the start of execution
   drawUserIDScreen();        // draws the user start-up screen (student ID and display size)
+  // Sort legendas' rows by name
+  legendas.getRows().sort((a, b) => a.getString("name").localeCompare(b.getString("name")));
 }
 
 // Runs every frame and redraws the screen
@@ -67,11 +69,10 @@ function draw()
       targets[i].draw();
     } 
     
-    
     // Draw the target label to be selected in the current trial
     textFont("Arial", 20);
     textAlign(CENTER);
-    text(legendas.getString(trials[current_trial],0), width/2, height - 20);
+    text(legendas.getString(trials[current_trial], 0), width/2, height - 20);
   }
 }
 
@@ -199,39 +200,28 @@ function continueTest()
 
 function createTargets(target_size, horizontal_gap, vertical_gap)
 {
-  // Define the margins between targets by dividing the white space 
-  // for the number of targets minus one
-  h_margin = horizontal_gap / (GRID_COLUMNS -1);
-  v_margin = vertical_gap / (GRID_ROWS - 1);
-  
-  // Set targets in a 8 x 10 grid
-  
-  
-  for (var r = 0; r < GRID_ROWS; r++)
-  {
-    for (var c = 0; c < GRID_COLUMNS; c++)
-    {
-      
-      // Find the appropriate label and ID for this target
-      let legendas_index = c + GRID_COLUMNS * r;
-      let target_label = legendas.getString(legendas_index, 0);   
-      let target_id = legendas.getNum(legendas_index, 1);  
-      let target = new Target(target_size, target_label, target_id);
-      targets.push(target);
-      
-    }  
-  }
-  targets.sort(function(a, b) {return a.label.localeCompare(b.label);});
-  for (r = 0; r < GRID_ROWS; r++)
-  {
-    for (var l = 0; l < GRID_COLUMNS; l++)
-    {
-    let legendas_index = l + GRID_COLUMNS * r;
-    let target_x = 40 + (h_margin + target_size) * l + target_size/2;        // give it some margin from the left border
-    let target_y = (v_margin + target_size) * r + target_size/2; 
-    targets[legendas_index].changeXandY(target_x,target_y+40);
-    }  
-  }
+	// Define the margins between targets by dividing the white space 
+	// for the number of targets minus one
+	h_margin = horizontal_gap / (GRID_COLUMNS -1);
+	v_margin = vertical_gap / (GRID_ROWS - 1);
+	
+	// Set targets in a 8 x 10 grid
+	for (var r = 0; r < GRID_ROWS; r++)
+	{
+		for (var c = 0; c < GRID_COLUMNS; c++)
+		{
+			let target_x = 40 + (h_margin + target_size) * c + target_size / 2;        // give it some margin from the left border
+			let target_y = (v_margin + target_size) * r + target_size / 2;
+		
+			// Find the appropriate label and ID for this target
+			let legendas_index = c + GRID_COLUMNS * r;
+			let target_label = legendas.getString(legendas_index, 0);
+			let target_id = legendas_index;
+		
+			let target = new Target(target_x, target_y + 40, target_size, target_label, target_id);
+			targets.push(target);
+		}  
+	}
 }
 
 // Is invoked when the canvas is resized (e.g., when we go fullscreen)
