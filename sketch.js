@@ -12,8 +12,8 @@ const RECORD_TO_FIREBASE  = false;  // Set to 'true' to record user results to F
 // Pixel density and setup variables (DO NOT CHANGE!)
 let PPI, PPCM;
 const NUM_OF_TRIALS       = 12;      // The numbers of trials (i.e., target selections) to be completed
-const GRID_ROWS           = 8;      // We divide our 80 targets in a 8x10 grid
-const GRID_COLUMNS        = 10;     // We divide our 80 targets in a 8x10 grid
+const GRID_ROWS           = 10;      // We divide our 80 targets in a 8x10 grid
+const GRID_COLUMNS        = 15;     // We divide our 80 targets in a 8x10 grid
 let continue_button;
 let legendas;                       // The item list from the "legendas" CSV
 
@@ -216,9 +216,10 @@ function createTargets(targetSize, horizontalGap, verticalGap)
 	let previousLetter = '\0';
 	let newCluster = -1;
 	let currentBar = topBar;
-	for (var i = 0; i < this.legendas.getRowCount(); i++) {
-		let currentLabel = this.legendas.getString(i, 0);
+	for (var i = 0; i < legendas.getRowCount(); i++) {
+		let currentLabel = legendas.getString(i, 0);
 		let currentLetter = currentLabel[0];
+		console.log("current %s previous %s", currentLetter, previousLetter);
 		let newTarget = new Target(targetSize, currentLabel, i);
 
 		if (currentLetter !== previousLetter) {
@@ -237,6 +238,12 @@ function createTargets(targetSize, horizontalGap, verticalGap)
 		}
 		targets.push(newTarget);
 		newCluster.addTarget(newTarget);
+	}
+	// Add the last cluster to one of the bars
+	if (currentBar.addCluster(newCluster,previousLetter) == false) {
+		if (bottomBar.addCluster(newCluster, previousLetter) == false) {
+			console.warn("Bars already full");
+		}
 	}
 }
 
