@@ -32,6 +32,10 @@ let attempt               = 0;      // users complete each test twice to account
 // Target list
 let targets               = [];
 
+// Target bars
+let topBar = -1;
+let bottomBar = -1;
+
 // Ensures important data is loaded before the program starts
 function preload()
 {
@@ -65,10 +69,9 @@ function draw()
     text("Trial " + (current_trial + 1) + " of " + trials.length, 50, 20);
         
     // Draw all targets
-	for (var i = 0; i < legendas.getRowCount(); i++){
-      targets[i].draw();
-    } 
-    
+	topBar.draw();
+	bottomBar.draw();
+
     // Draw the target label to be selected in the current trial
     textFont("Arial", 20);
     textAlign(CENTER);
@@ -196,31 +199,44 @@ function continueTest()
 
 // Creates and positions the UI targets
 
-
-
-function createTargets(target_size, horizontal_gap, vertical_gap)
+function createTargets(targetSize, horizontalGap, verticalGap)
 {
 	// Define the margins between targets by dividing the white space 
 	// for the number of targets minus one
-	h_margin = horizontal_gap / (GRID_COLUMNS -1);
-	v_margin = vertical_gap / (GRID_ROWS - 1);
-	
-	// Set targets in a 8 x 10 grid
-	for (var r = 0; r < GRID_ROWS; r++)
-	{
-		for (var c = 0; c < GRID_COLUMNS; c++)
-		{
-			let target_x = 40 + (h_margin + target_size) * c + target_size / 2;        // give it some margin from the left border
-			let target_y = (v_margin + target_size) * r + target_size / 2;
-		
-			// Find the appropriate label and ID for this target
-			let legendas_index = c + GRID_COLUMNS * r;
-			let target_label = legendas.getString(legendas_index, 0);
-			let target_id = legendas_index;
-		
-			let target = new Target(target_x, target_y + 40, target_size, target_label, target_id);
-			targets.push(target);
-		}  
+	let hMargin = horizontalGap / (GRID_COLUMNS -1);
+	let vMargin = verticalGap / (GRID_ROWS - 1);
+	let barRows = Math.floor((GRID_ROWS - 2) / 2);
+	let topBarY = 40 + barRows * (targetSize + vMargin);
+	let bottomBarY = topBarY + 2 * targetSize + vMargin;
+
+	topBar = new Bar(topBarY, GRID_COLUMNS, targetSize, hMargin, true);
+	bottomBar = new Bar(bottomBarY, GRID_COLUMNS, targetSize, hMargin, false);
+
+	// Create clusters of targets
+	let previousLetter = '\0';
+	let newCluster = -1;
+	let currentBar = topBar;
+	for (var i = 0; i < this.legendas.getRowCount(); i++) {
+		let currentLabel = this.legendas.getString(i, 0);
+		let currentLetter = currentLabel[0];
+		let newTarget = new Target(targetSize, currentLabel, i);
+
+		if (currentLetter !== previousLetter) {
+			if (newCluster !== -1) {
+				// Add the previous cluster to one of the bars
+				if (currentBar.addCluster(newCluster, currentLetter) == false) {
+					currentBar = bottomBar;
+					if (currentBar.addCluster(newCluster, currentLetter) == false) {
+						console.warn("Bars already full");
+					}
+				}
+			}
+			// Create new cluster for the current letter
+			newCluster = new Cluster(barRows, targetSize, vMargin, hMargin);
+			previousLetter = currentLetter;
+		}
+		targets.push(newTarget);
+		newCluster.addTarget(newTarget);
 	}
 }
 
@@ -239,7 +255,7 @@ function windowResized()
     // Below we find out out white space we can have between 2 cm targets
     let screen_width   = display.width * 2.54;             // screen width
     let screen_height  = display.height * 2.54;            // screen height
-    let target_size    = 2;                                // sets the target size (will be converted to cm when passed to createTargets)
+    let target_size    = 1.66;                                // sets the target size (will be converted to cm when passed to createTargets)
     let horizontal_gap = screen_width - target_size * GRID_COLUMNS;// empty space in cm across the x-axis (based on 10 targets per row)
     let vertical_gap   = screen_height - target_size * GRID_ROWS;  // empty space in cm across the y-axis (based on 8 targets per column)
 

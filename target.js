@@ -1,10 +1,10 @@
 // Target class (position and width)
 class Target
 {
-	constructor(x, y, w, l, id)
+	constructor(w, l, id)
 	{
-		this.x = x;
-		this.y = y;
+		this.x = -1;
+		this.y = -1;
 		this.width = w;
 		this.label = l;
 		this.id	= id;
