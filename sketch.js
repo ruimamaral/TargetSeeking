@@ -209,8 +209,10 @@ function createTargets(targetSize, horizontalGap, verticalGap)
 	let topBarY = 40 + barRows * (targetSize + vMargin);
 	let bottomBarY = topBarY + targetSize + vMargin;
 
-	topBar = new Bar(topBarY, GRID_COLUMNS, targetSize, hMargin, true);
-	bottomBar = new Bar(bottomBarY, GRID_COLUMNS, targetSize, hMargin, false);
+	topBar = new Bar(topBarY, GRID_COLUMNS,
+			barRows, targetSize, vMargin, hMargin, true);
+	bottomBar = new Bar(bottomBarY, GRID_COLUMNS,
+			barRows, targetSize, vMargin, hMargin, false);
 
 	// Create clusters of targets
 	let previousLetter = '\0';
