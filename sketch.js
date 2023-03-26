@@ -12,7 +12,7 @@ const RECORD_TO_FIREBASE  = false;  // Set to 'true' to record user results to F
 // Pixel density and setup variables (DO NOT CHANGE!)
 let PPI, PPCM;
 const NUM_OF_TRIALS       = 12;      // The numbers of trials (i.e., target selections) to be completed
-const GRID_ROWS           = 10;      // We divide our 80 targets in a 8x10 grid
+const GRID_ROWS           = 9;      // We divide our 80 targets in a 8x10 grid
 const GRID_COLUMNS        = 15;     // We divide our 80 targets in a 8x10 grid
 let continue_button;
 let legendas;                       // The item list from the "legendas" CSV
@@ -205,9 +205,9 @@ function createTargets(targetSize, horizontalGap, verticalGap)
 	// for the number of targets minus one
 	let hMargin = horizontalGap / (GRID_COLUMNS -1);
 	let vMargin = verticalGap / (GRID_ROWS - 1);
-	let barRows = Math.floor((GRID_ROWS - 2) / 2);
+	let barRows = Math.floor((GRID_ROWS - 1) / 2);
 	let topBarY = 40 + barRows * (targetSize + vMargin);
-	let bottomBarY = topBarY + 2 * targetSize + vMargin;
+	let bottomBarY = topBarY + targetSize + vMargin;
 
 	topBar = new Bar(topBarY, GRID_COLUMNS, targetSize, hMargin, true);
 	bottomBar = new Bar(bottomBarY, GRID_COLUMNS, targetSize, hMargin, false);
@@ -225,9 +225,9 @@ function createTargets(targetSize, horizontalGap, verticalGap)
 		if (currentLetter !== previousLetter) {
 			if (newCluster !== -1) {
 				// Add the previous cluster to one of the bars
-				if (currentBar.addCluster(newCluster, currentLetter) == false) {
+				if (currentBar.addCluster(newCluster, previousLetter) == false) {
 					currentBar = bottomBar;
-					if (currentBar.addCluster(newCluster, currentLetter) == false) {
+					if (currentBar.addCluster(newCluster, previousLetter) == false) {
 						console.warn("Bars already full");
 					}
 				}
