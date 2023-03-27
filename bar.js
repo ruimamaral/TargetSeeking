@@ -19,10 +19,10 @@ class Bar {
 		}
 		let clusterX = 40 + this.currentCol * (this.targetSize + this.horizontalMargin);
 		let clusterY = this.y;
-		let labelX = clusterX
-		let labelY = clusterY - this.targetSize / 2 - this.targetSize * 0.05;
+		let labelHeight = this.targetSize * 0.45; 
 		let labelWidth = newCluster.getWidth();
-		let labelHeight = this.targetSize / 2; 
+		let labelX = clusterX
+		let labelY = clusterY - labelHeight - this.targetSize * 0.07;
 		let lineX = clusterX - this.horizontalMargin / 2;
 		let lineOriginY = labelY + labelHeight / 2;
 		let lineEndY = clusterY + (this.targetSize + this.verticalMargin) * this.rows - this.verticalMargin * 2;
@@ -30,7 +30,7 @@ class Bar {
 
 			// Applies vertical offset to the label
 			// in order to properly align it with the top bar
-			labelY = clusterY + this.targetSize * 0.05;
+			labelY = clusterY + this.targetSize * 0.07;
 			lineOriginY = labelY + labelHeight / 2;
 			// Applies vertical offset to the
 			// cluster in order to properly align it with the top bar

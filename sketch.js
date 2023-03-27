@@ -221,7 +221,6 @@ function createTargets(targetSize, horizontalGap, verticalGap)
 	for (var i = 0; i < legendas.getRowCount(); i++) {
 		let currentLabel = legendas.getString(i, 0);
 		let currentLetter = currentLabel[0];
-		console.log("current %s previous %s", currentLetter, previousLetter);
 		let newTarget = new Target(targetSize, currentLabel, i);
 
 		if (currentLetter !== previousLetter) {
