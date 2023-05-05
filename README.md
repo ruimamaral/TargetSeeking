@@ -1,5 +1,5 @@
 # TargetSeeking
-Coursework from the 22/23 Man-Machine Interaction class in IST.
+Coursework from the 22/23 Human-computer Interaction class in IST.
 
 The objective was to lower the user's time when instructed to select a certain target word.
 
